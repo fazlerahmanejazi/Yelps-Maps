@@ -35,16 +35,16 @@ def trace(fn):
     @functools.wraps(fn)
     def wrapped(*args, **kwds):
         global _PREFIX
-        reprs = [repr(e) for e in args]
-        reprs += [repr(k) + '=' + repr(v) for k, v in kwds.items()]
-        log('{0}({1})'.format(fn.__name__, ', '.join(reprs)) + ':')
-        _PREFIX += '    '
+        reprs=[repr(e) for e in args]
+        reprs+=[repr(k)+'='+repr(v) for k, v in kwds.items()]
+        log('{0}({1})'.format(fn.__name__, ', '.join(reprs))+':')
+        _PREFIX+='    '
         try:
-            result = fn(*args, **kwds)
-            _PREFIX = _PREFIX[:-4]
+            result=fn(*args, **kwds)
+            _PREFIX=_PREFIX[:-4]
         except Exception as e:
-            log(fn.__name__ + ' exited via exception')
-            _PREFIX = _PREFIX[:-4]
+            log(fn.__name__+' exited via exception')
+            _PREFIX=_PREFIX[:-4]
             raise
         # Here, print out the return value.
         log('{0}({1}) -> {2}'.format(fn.__name__, ', '.join(reprs), result))
@@ -54,13 +54,13 @@ def trace(fn):
 
 def log(message):
     """Print an indented message (used with trace)."""
-    message = str(message)
-    print(_PREFIX + re.sub('\n', '\n' + _PREFIX, message))
+    message=str(message)
+    print(_PREFIX+re.sub('\n', '\n'+_PREFIX, message))
 
 
 def log_current_line():
     """Print information about the current line of code."""
-    frame = inspect.stack()[1]
+    frame=inspect.stack()[1]
     log('Current line: File "{f[1]}", line {f[2]}, in {f[3]}'.format(f=frame))
 
 
@@ -74,8 +74,8 @@ def interact(msg=None):
       execution.
     """
     # evaluate commands in current namespace
-    frame = inspect.currentframe().f_back
-    namespace = frame.f_globals.copy()
+    frame=inspect.currentframe().f_back
+    namespace=frame.f_globals.copy()
     namespace.update(frame.f_locals)
 
     # exit on interrupt
@@ -86,9 +86,9 @@ def interact(msg=None):
 
     if not msg:
         _, filename, line, _, _, _ = inspect.stack()[1]
-        msg = 'Interacting at File "{0}", line {1} \n'.format(filename, line)
-        msg += '    Unix:    <Control>-D continues the program; \n'
-        msg += '    Windows: <Control>-Z <Enter> continues the program; \n'
-        msg += '    exit() or <Control>-C exits the program'
+        msg='Interacting at File "{0}", line {1} \n'.format(filename, line)
+        msg+='    Unix:    <Control>-D continues the program; \n'
+        msg+='    Windows: <Control>-Z <Enter> continues the program; \n'
+        msg+='    exit() or <Control>-C exits the program'
 
     code.interact(msg, None, namespace)
